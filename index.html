@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GKS Journey - Epic Bike Adventures</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 🔥 EPIC MOTORCYCLE TRAIL BACKGROUND 🔥 */
+        .bike-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, #1a0033, #330066, #6600cc, #1a0033);
+            z-index: -2; overflow: hidden;
+        }
+        .bike-trail {
+            position: absolute; width: 4px; height: 20px; background: linear-gradient(to bottom, transparent, #ff00ff, #00ffff);
+            border-radius: 2px; animation: bikeSpeed linear infinite;
+            box-shadow: 0 0 20px #ff00ff;
+        }
+        @keyframes bikeSpeed {
+            0% { transform: translateY(100vh) scaleY(0.5); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) scaleY(1.5); opacity: 0; }
+        }
+        .headlight {
+            position: absolute; width: 60px; height: 60px; background: radial-gradient(circle, #ffff00 0%, transparent 70%);
+            border-radius: 50%; animation: headlightSweep 4s linear infinite;
+        }
+        @keyframes headlightSweep {
+            0% { transform: translateX(-100vw) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.8; }
+            80% { opacity: 0.8; }
+            100% { transform: translateX(100vw) rotate(360deg); opacity: 0; }
+        }
+
+        .overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.6); z-index: -1;
+        }
+
+        /* SIMPLIFIED NAVIGATION - ONE ITEM */
+        .nav-container {
+            position: fixed; top: 0; left: 0; right: 0;
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(20px);
+            z-index: 1000; padding: 1rem 2rem;
+        }
+        .nav-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.8rem; font-weight: 800; text-decoration: none; color: #ff00ff; text-shadow: 0 0 10px #ff00ff; }
+        .nav-menu { display: flex; list-style: none; gap: 2rem; }
+        .nav-menu a { 
+            color: rgba(255,255,255,0.9); text-decoration: none; padding: 0.8rem 1.5rem; 
+            border-radius: 25px; transition: all 0.3s; font-weight: 600; font-size: 1.1rem;
+        }
+        .nav-menu a:hover { background: rgba(255,0,255,0.3); box-shadow: 0 0 15px #ff00ff; }
+        .hamburger { display: none; flex-direction: column; cursor: pointer; gap: 4px; padding: 5px; }
+        .hamburger span { width: 28px; height: 3px; background: #ff00ff; transition: all 0.3s; border-radius: 2px; box-shadow: 0 0 5px #ff00ff; }
+
+        /* VIDEO MODAL */
+        .video-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98); z-index: 2000; align-items: center; justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+        .video-modal.active { display: flex; }
+        .video-container { position: relative; max-width: 95%; max-height: 95%; }
+        .video-container iframe { 
+            width: 100%; height: 60vh; max-height: 600px; border-radius: 20px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+        }
+        .close-video { 
+            position: absolute; top: -60px; right: -60px; background: rgba(255,0,255,0.9); 
+            color: white; border: none; border-radius: 50%; width: 60px; height: 60px; 
+            font-size: 1.5rem; cursor: pointer; box-shadow: 0 10px 30px rgba(255,0,255,0.5);
+        }
+        .video-title {
+            position: absolute; bottom: -50px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.9); padding: 10px 20px; border-radius: 25px;
+            font-size: 1.1rem; font-weight: 700; white-space: nowrap;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+        .header { padding: 120px 0 60px; text-align: center; }
+        .header h1 { 
+            font-size: clamp(2.5rem, 8vw, 5rem); margin-bottom: 1rem; 
+            background: linear-gradient(45deg, #ff00ff, #00ffff); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255,0,255,0.5);
+        }
+        .subscribe-btn {
+            display: inline-block; background: linear-gradient(45deg, #FF0000, #CC0000);
+            color: white; padding: 18px 36px; border-radius: 50px; text-decoration: none;
+            font-weight: 700; font-size: 1.2rem; box-shadow: 0 15px 40px rgba(255,0,0,0.4);
+            transition: all 0.3s ease;
+        }
+        .subscribe-btn:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(255,0,0,0.6); }
+
+        /* Video Grid */
+        .grid { display: grid; gap: 2.5rem; padding: 2rem 0 3rem; }
+        .travel-card {
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(20px);
+            border-radius: 30px; overflow: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer; border: 3px solid transparent; position: relative;
+        }
+        .travel-card:hover { 
+            transform: translateY(-20px) scale(1.05); 
+            border-color: rgba(255,0,255,0.6); box-shadow: 0 30px 80px rgba(255,0,255,0.3);
+        }
+        .video-thumb { position: relative; height: 250px; overflow: hidden; }
+        .video-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .travel-card:hover .video-thumb img { transform: scale(1.15); }
+        .play-btn {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: linear-gradient(45deg, #FF0000, #ff4444); color: white; border-radius: 50%;
+            width: 90px; height: 90px; display: flex; align-items: center; justify-content: center;
+            font-size: 2.2rem; box-shadow: 0 15px 40px rgba(255,0,0,0.6); transition: all 0.4s ease;
+        }
+        .travel-card:hover .play-btn { transform: translate(-50%, -50%) scale(1.15); }
+        .card-content { padding: 2rem; }
+        .card-title { font-size: 1.6rem; margin-bottom: 0.8rem; font-weight: 900; }
+        .card-meta { color: rgba(255,255,255,0.8); font-size: 1rem; margin-bottom: 1rem; }
+        .card-text { color: rgba(255,255,255,0.95); margin-bottom: 1.5rem; line-height: 1.5; }
+        .tags { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 1rem; }
+        .tag { padding: 0.5rem 1rem; border-radius: 25px; font-size: 0.85rem; font-weight: 700; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu { display: none; } .hamburger { display: flex; }
+            .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+            .hamburger.active span:nth-child(2) { opacity: 0; }
+            .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
+            .video-container iframe { height: 50vh; }
+            .grid { grid-template-columns: 1fr; padding: 1rem; gap: 1.5rem; }
+        }
+        @media (min-width: 600px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1000px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+    <!-- 🔥 MOTORCYCLE SPEED TRAIL BACKGROUND 🔥 -->
+    <div class="bike-bg" id="bikeBg"></div>
+    <div class="overlay"></div>
+
+    <!-- SIMPLIFIED NAVIGATION - ONE CLEAN MENU -->
+    <nav class="nav-container">
+        <div class="nav-content">
+            <a href="#" class="logo"><i class="fas fa-motorcycle me-2"></i>GKS Journey</a>
+            <ul class="nav-menu">
+                <li><a href="#rides">🏍️ Epic Adventures</a></li>
+            </ul>
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="mobile-menu" id="mobileMenu">
+            <ul>
+                <li><a href="#rides" onclick="closeMenu()">🏍️ Epic Adventures</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-motorcycle"></i> GKS Journey</h1>
+            <p>Epic Motorcycle Adventures Across South India</p>
+            <a href="https://youtube.com/@gksjourney" target="_blank" class="subscribe-btn">
+                <i class="fab fa-youtube me-2"></i>Subscribe 1.2M
+            </a>
+        </header>
+
+        <!-- 🔥 4 VIDEO GRID - TOUCH TO PLAY 🔥 -->
+        <section class="grid">
+            <!-- 1. ATHIRAPALLI -->
+            <div class="travel-card" onclick="playVideo('HaszHipa_gw', '🏍️ Athirapalli Group Ride')">
+                <div class="video-thumb">
+                    <img src="https://img.youtube.com/vi/HaszHipa_gw/maxresdefault.jpg" alt="Athirapalli">
+                    <div class="play-btn"><i class="fas fa-play"></i></div>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">🏍️ Athirapalli Group Ride</h3>
+                    <p class="card-meta">@gksjourney • Latest</p>
+                    <p class="card-text">Epic group ride to Kerala's most powerful waterfalls!</p>
+                    <div class="tags">
+                        <span class="tag" style="background: linear-gradient(45deg, #FF0000, #ff4444);">4K</span>
+                        <span class="tag" style="background: #00C853; color: white;">28 min</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. PERUMAL MUDI -->
+            <div class="travel-card" onclick="playVideo('_9jTtKFXOpo', '⛰️ Perumal Mudi Adventure')">
+                <div class="video-thumb">
+                    <img src="https://img.youtube.com/vi/_9jTtKFXOpo/maxresdefault.jpg" alt="Perumal Mudi">
+                    <div class="play-btn"><i class="fas fa-play"></i></div>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">⛰️ Perumal Mudi Adventure</h3>
+                    <p class="card-meta">@gksjourney • 3 days ago</p>
+                    <p class="card-text">Insane climbs to Tamil Nadu's highest peaks!</p>
+                    <div class="tags">
+                        <span class="tag" style="background: linear-gradient(45deg, #FF6B35, #F7931E);">4K</span>
+                        <span class="tag" style="background: #00C853; color: white;">25 min</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. KOLLI HILLS -->
+            <div class="travel-card" onclick="playVideo('wVSosMA0JY0', '🏞️ Kolli Hills Madness')">
+                <div class="video-thumb">
+                    <img src="https://img.youtube.com/vi/wVSosMA0JY0/maxresdefault.jpg" alt="Kolli Hills">
+                    <div class="play-btn"><i class="fas fa-play"></i></div>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">🏞️ Kolli Hills Madness</h3>
+                    <p class="card-meta">@gksjourney • 1 week ago</p>
+                    <p class="card-text">70 hairpin bends - ultimate biking challenge!</p>
+                    <div class="tags">
+                        <span class="tag" style="background: linear-gradient(45deg, #00D4FF, #0099CC);">1080p</span>
+                        <span class="tag" style="background: #FF9800; color: white;">22 min</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. SIRIYUR -->
+            <div class="travel-card" onclick="playVideo('rAVFuC8N2T8', '🌄 Siriyur Sunrise Ride')">
+                <div class="video-thumb">
+                    <img src="https://img.youtube.com/vi/rAVFuC8N2T8/maxresdefault.jpg" alt="Siriyur">
+                    <div class="play-btn"><i class="fas fa-play"></i></div>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">🌄 Siriyur Sunrise Ride</h3>
+                    <p class="card-meta">@gksjourney • 10 days ago</p>
+                    <p class="card-text">Magical sunrise ride through misty hills!</p>
+                    <div class="tags">
+                        <span class="tag" style="background: linear-gradient(45deg, #FF4081, #F50057);">4K</span>
+                        <span class="tag" style="background: #9C27B0; color: white;">20 min</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- UNIVERSAL VIDEO MODAL -->
+    <div class="video-modal" id="videoModal">
+        <div class="video-container">
+            <button class="close-video" onclick="closeVideo()">&times;</button>
+            <div class="video-title" id="videoTitle"></div>
+            <iframe id="videoIframe" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Create motorcycle trail background
+        function createBikeTrails() {
+            const bg = document.getElementById('bikeBg');
+            for(let i = 0; i < 80; i++) {
+                const trail = document.createElement('div');
+                trail.className = 'bike-trail';
+                trail.style.left = Math.random() * 100 + '%';
+                trail.style.animationDuration = (Math.random() * 3 + 1.5) + 's';
+                trail.style.animationDelay = Math.random() * 2 + 's';
+                bg.appendChild(trail);
+            }
+            for(let i = 0; i < 8; i++) {
+                const light = document.createElement('div');
+                light.className = 'headlight';
+                light.style.top = Math.random() * 100 + '%';
+                light.style.animationDelay = Math.random() * 4 + 's';
+                bg.appendChild(light);
+            }
+        }
+
+        // Play ANY video in modal
+        function playVideo(videoId, title) {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoIframe');
+            const videoTitle = document.getElementById('videoTitle');
+            
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+            videoTitle.textContent = title;
+            modal.classList.add('active');
+        }
+
+        function closeVideo() {
+            document.getElementById('videoModal').classList.remove('active');
+            document.getElementById('videoIframe').src = '';
+        }
+
+        // Navigation
+        function toggleMenu() {
+            document.querySelector('.hamburger').classList.toggle('active');
+            document.getElementById('mobileMenu').classList.toggle('active');
+        }
+        function closeMenu() {
+            document.querySelector('.hamburger').classList.remove('active');
+            document.getElementById('mobileMenu').classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            if(e.target.classList.contains('video-modal')) closeVideo();
+        });
+
+        // Initialize
+        createBikeTrails();
+    </script>
+</body>
+</html>
